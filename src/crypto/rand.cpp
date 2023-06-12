@@ -13,7 +13,7 @@ void rand_bytes(char* buf, int count)
 
   int result = RAND_bytes((unsigned char*)buf, count);
   if (result != 1)
-    FC_THROW("Error calling OpenSSL's RAND_bytes(): ${code}", ("code", (uint32_t)ERR_get_error()));
+    FC_THROW("Error calling OpenSSL's RAND_bytes(): {code}", ("code", (uint32_t)ERR_get_error()));
 }
 
 void rand_pseudo_bytes(char* buf, int count)
@@ -25,7 +25,7 @@ void rand_pseudo_bytes(char* buf, int count)
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
   int result = RAND_pseudo_bytes((unsigned char*)buf, count);
   if (result == -1)
-    FC_THROW("Error calling OpenSSL's RAND_pseudo_bytes(): ${code}", ("code", (uint32_t)ERR_get_error()));
+    FC_THROW("Error calling OpenSSL's RAND_pseudo_bytes(): {code}", ("code", (uint32_t)ERR_get_error()));
 #else
   rand_bytes(buf, count);
 #endif

@@ -31,7 +31,7 @@ namespace fc { namespace crypto {
          public_key( const signature& c, const sha256& digest, bool check_canonical = true );
 
          public_key( storage_type&& other_storage )
-         :_storage(forward<storage_type>(other_storage))
+         :_storage(std::forward<storage_type>(other_storage))
          {}
 
          bool valid()const;
@@ -60,5 +60,18 @@ namespace fc {
 
    void from_variant(const variant& var, crypto::public_key& vo);
 } // namespace fc
+
+namespace fmt {
+   template<>
+   struct formatter<fc::crypto::public_key>{
+      template<typename ParseContext>
+      constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+      template<typename FormatContext>
+      auto format( const fc::crypto::public_key& p, FormatContext& ctx ) {
+         return format_to( ctx.out(), "{}", p.to_string());
+      }
+   };
+} // namespace fmt
 
 FC_REFLECT(fc::crypto::public_key, (_storage) )

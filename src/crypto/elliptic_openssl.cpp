@@ -254,6 +254,6 @@ namespace fc { namespace ecc {
                 }
                 return csig;
             } // while true
-        } FC_RETHROW_EXCEPTIONS( warn, "sign ${digest}", ("digest", digest)("private_key",*this) );
+        } FC_RETHROW_EXCEPTIONS( warn, "sign {digest}", ("digest", digest)("private_key",*this) );
     }
 } }

@@ -96,7 +96,7 @@ namespace fc {
           out.resize(rtn);
           return out;
        }
-       FC_THROW_EXCEPTION( exception, "openssl: ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+       FC_THROW_EXCEPTION( exception, "openssl: {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
     }
 
     bytes public_key::encrypt( const bytes& in )const
@@ -112,7 +112,7 @@ namespace fc {
           out.resize(rtn);
           return out;
        }
-       FC_THROW_EXCEPTION( exception, "openssl: ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+       FC_THROW_EXCEPTION( exception, "openssl: {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
     }
     bytes public_key::decrypt( const bytes& in )const
     {
@@ -126,7 +126,7 @@ namespace fc {
           out.resize(rtn);
           return out;
        }
-       FC_THROW_EXCEPTION( exception, "openssl: ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+       FC_THROW_EXCEPTION( exception, "openssl: {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
     }
 
     bytes public_key::serialize()const
@@ -139,7 +139,7 @@ namespace fc {
        if( e != 1 )
        {
            BIO_free(mem);
-           FC_THROW_EXCEPTION( exception, "openssl: ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+           FC_THROW_EXCEPTION( exception, "openssl: {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
        }
        char* dat;
        uint32_t l = BIO_get_mem_data( mem, &dat );
@@ -209,7 +209,7 @@ namespace fc {
        if( 1 != RSA_sign( NID_sha1, (uint8_t*)&digest,
                           20, (unsigned char*)&sig, &slen, my->rsa ) )
        {
-           FC_THROW_EXCEPTION( exception, "rsa sign failed with ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+           FC_THROW_EXCEPTION( exception, "rsa sign failed with {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
        }
     }
 
@@ -223,7 +223,7 @@ namespace fc {
        if( 1 != RSA_sign( NID_sha1, (uint8_t*)digest.data(),
                           20, (unsigned char*)sig.data(), &slen, my->rsa ) )
        {
-           FC_THROW_EXCEPTION( exception, "rsa sign failed with ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+           FC_THROW_EXCEPTION( exception, "rsa sign failed with {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
        }
        return sig;
     }
@@ -237,7 +237,7 @@ namespace fc {
        if( 1 != RSA_sign( NID_sha256, (uint8_t*)digest.data(),
                           32, (unsigned char*)sig.data(), &slen, my->rsa ) )
        {
-          FC_THROW_EXCEPTION( exception, "rsa sign failed with ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+          FC_THROW_EXCEPTION( exception, "rsa sign failed with {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
        }
        return sig;
     }
@@ -301,7 +301,7 @@ namespace fc {
        if( e != 1 )
        {
            BIO_free(mem);
-           FC_THROW_EXCEPTION( exception, "Error writing private key, ${message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
+           FC_THROW_EXCEPTION( exception, "Error writing private key, {message}", ("message",fc::string(ERR_error_string( ERR_get_error(),NULL))) );
        }
        char* dat;
        uint32_t l = BIO_get_mem_data( mem, &dat );

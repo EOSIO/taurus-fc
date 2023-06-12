@@ -99,7 +99,7 @@ namespace fc  {
     {
       FC_THROW_EXCEPTION( parse_error_exception, "Couldn't parse int64_t" );
     }
-    FC_RETHROW_EXCEPTIONS( warn, "${i} => int64_t", ("i",i) )
+    FC_RETHROW_EXCEPTIONS( warn, "{i} => int64_t", ("i",i) )
   }
 
   uint64_t   to_uint64( const fc::string& i )
@@ -112,7 +112,7 @@ namespace fc  {
     {
       FC_THROW_EXCEPTION( parse_error_exception, "Couldn't parse uint64_t" );
     }
-    FC_RETHROW_EXCEPTIONS( warn, "${i} => uint64_t", ("i",i) )
+    FC_RETHROW_EXCEPTIONS( warn, "{i} => uint64_t", ("i",i) )
   } FC_CAPTURE_AND_RETHROW( (i) ) }
 
   double     to_double( const fc::string& i)
@@ -125,7 +125,7 @@ namespace fc  {
     {
       FC_THROW_EXCEPTION( parse_error_exception, "Couldn't parse double" );
     }
-    FC_RETHROW_EXCEPTIONS( warn, "${i} => double", ("i",i) )
+    FC_RETHROW_EXCEPTIONS( warn, "{i} => double", ("i",i) )
   }
 
   fc::string to_string(double d)

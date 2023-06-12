@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <fc/string.hpp>
+#include <fc/filesystem.hpp>
 
 #ifdef _MSC_VER
   #pragma warning (push)
@@ -137,6 +138,62 @@ namespace fc {
 FC_REFLECT_TYPENAME( fc::time_point )
 FC_REFLECT_TYPENAME( fc::microseconds )
 FC_REFLECT_TYPENAME( fc::time_point_sec )
+
+#if __GNUC__ > 10  && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
+#endif       
+
+#include <spdlog/fmt/fmt.h>
+
+#if __GNUC__ > 10  && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif       
+
+namespace fmt {
+    template<>
+    struct formatter<fc::time_point> {
+        template<typename ParseContext>
+        constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+        template<typename FormatContext>
+        auto format( const fc::time_point& p, FormatContext& ctx ) {
+           try {
+              return format_to( ctx.out(), "{}", (std::string)p );
+           } catch (...) {
+              int line = __LINE__;
+              std::string file = __FILE__;
+              return format_to(ctx.out(), "{}", "< error formatting " + fc::path(file).filename().generic_string() + ":" + std::to_string(line) + " >");
+           }
+        }
+    };
+    template<>
+    struct formatter<fc::microseconds> {
+        template<typename ParseContext>
+        constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+        template<typename FormatContext>
+        auto format( const fc::microseconds& p, FormatContext& ctx ) {
+           return format_to( ctx.out(), "{}", p.count() );
+        }
+    };
+    template<>
+    struct formatter<fc::time_point_sec> {
+        template<typename ParseContext>
+        constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+        template<typename FormatContext>
+        auto format( const fc::time_point_sec& p, FormatContext& ctx ) {
+           try {
+              return format_to( ctx.out(), "{}", (std::string)p );
+           } catch (...) {
+              int line = __LINE__;
+              std::string file = __FILE__;
+              return format_to(ctx.out(), "{}", "< error formatting " + fc::path(file).filename().generic_string() + ":" + std::to_string(line) + " >");
+           }
+        }
+    };
+}
 
 #ifdef _MSC_VER
   #pragma warning (pop)

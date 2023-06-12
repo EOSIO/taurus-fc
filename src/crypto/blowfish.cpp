@@ -451,7 +451,7 @@ void blowfish::encrypt(unsigned char* buf, uint64_t n, int iMode)
 {
 	//Check the buffer's length - should be > 0 and multiple of 8
 	if((n==0)||(n%8!=0))
-		FC_THROW_EXCEPTION( exception, "invalid buffer length ${n}, not multiple of 8", ("n", n) ); 
+		FC_THROW_EXCEPTION( exception, "invalid buffer length {n}, not multiple of 8", ("n", n) );
 	sblock work;
 	if(iMode == CBC) //CBC mode, using the Chain
 	{
@@ -494,7 +494,7 @@ void blowfish::decrypt(unsigned char* buf, uint64_t n, int iMode)
 {
 	//Check the buffer's length - should be > 0 and multiple of 8
 	if((n==0)||(n%8!=0))
-		FC_THROW_EXCEPTION( exception, "invalid buffer length ${n}, not multiple of 8", ("n", n) ); 
+		FC_THROW_EXCEPTION( exception, "invalid buffer length {n}, not multiple of 8", ("n", n) );
 	sblock work;
 	if(iMode == CBC) //CBC mode, using the Chain
 	{
@@ -539,7 +539,7 @@ void blowfish::encrypt(const unsigned char* in, unsigned char* out, uint64_t n, 
 {
 	//Check the buffer's length - should be > 0 and multiple of 8
 	if((n==0)||(n%8!=0))
-		FC_THROW_EXCEPTION( exception, "invalid buffer length ${n}, not multiple of 8", ("n", n) ); 
+		FC_THROW_EXCEPTION( exception, "invalid buffer length {n}, not multiple of 8", ("n", n) );
 	sblock work;
 	if(iMode == CBC) //CBC mode, using the Chain
 	{
@@ -582,7 +582,7 @@ void blowfish::decrypt(const unsigned char* in, unsigned char* out, uint64_t n, 
 {
 	//Check the buffer's length - should be > 0 and multiple of 8
 	if((n==0)||(n%8!=0))
-		FC_THROW_EXCEPTION( exception, "invalid buffer length ${n}, not multiple of 8", ("n", n) ); 
+		FC_THROW_EXCEPTION( exception, "invalid buffer length {n}, not multiple of 8", ("n", n) );
 	sblock work;
 	if(iMode == CBC) //CBC mode, using the Chain
 	{

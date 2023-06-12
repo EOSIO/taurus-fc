@@ -27,7 +27,7 @@ namespace fc
       return eps;
     }
     FC_THROW_EXCEPTION(unknown_host_exception,
-                       "name resolution failed: ${reason}",
+                       "name resolution failed: {reason}",
                        ("reason", ec.message()));
   }
 }

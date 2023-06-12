@@ -23,7 +23,7 @@ namespace fc
        auto base36 = "0123456789abcdefghijklmnopqrstuvwxyz";
        std::vector<char> out( static_cast<size_t>(len * 1.6) + 2 );
        int pos = out.size() - 1;
-       out[pos] = '\0';
+
        fc::bigint _36(36);
        do {
          if( value ) {
@@ -63,7 +63,7 @@ namespace fc
               value = value + (_36.exp(pos) *  fc::bigint(10+*itr - 'A'));
           else
           {
-             wlog("unknown '${char}'", ("char",fc::string(&*itr,1)) );
+             wlog("unknown '{char}'", ("char",fc::string(&*itr,1)) );
           }
           ++pos;
        }

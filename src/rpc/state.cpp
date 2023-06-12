@@ -23,19 +23,19 @@ variant state::local_call( const string& method_name, const variants& args )
    auto method_itr = _methods.find(method_name);
    if( method_itr == _methods.end() && _unhandled )
       return _unhandled( method_name, args );
-   FC_ASSERT( method_itr != _methods.end(), "Unknown Method: ${name}", ("name",method_name) );
+   FC_ASSERT( method_itr != _methods.end(), "Unknown Method: {name}", ("name",method_name) );
    return method_itr->second(args);
 }
 
 void  state::handle_reply( const response& response )
 {
    auto await = _awaiting.find( response.id );
-   FC_ASSERT( await != _awaiting.end(), "Unknown Response ID: ${id}", ("id",response.id)("response",response) );
+   FC_ASSERT( await != _awaiting.end(), "Unknown Response ID: {id}", ("id",response.id)("response",response) );
    if( response.result ) 
       await->second->set_value( *response.result );
    else if( response.error )
    {
-      await->second->set_exception( std::make_exception_ptr( FC_EXCEPTION( exception, "${error}", ("error",response.error->message)("data",response) ) ) );
+      await->second->set_exception( std::make_exception_ptr( FC_EXCEPTION( exception, "{error}", ("error",response.error->message)("data",response) ) ) );
    }
    else
       await->second->set_value( fc::variant() );

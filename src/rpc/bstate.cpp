@@ -23,19 +23,19 @@ result_type bstate::local_call( const string& method_name, const params_type& ar
    auto method_itr = _methods.find(method_name);
    if( method_itr == _methods.end() && _unhandled )
       return _unhandled( method_name, args );
-   FC_ASSERT( method_itr != _methods.end(), "Unknown Method: ${name}", ("name",method_name) );
+   FC_ASSERT( method_itr != _methods.end(), "Unknown Method: {name}", ("name",method_name) );
    return method_itr->second(args);
 }
 
 void  bstate::handle_reply( const bresponse& bresponse )
 {
    auto await = _awaiting.find( bresponse.id );
-   FC_ASSERT( await != _awaiting.end(), "Unknown Response ID: ${id}", ("id",bresponse.id)("bresponse",bresponse) );
+   FC_ASSERT( await != _awaiting.end(), "Unknown Response ID: {id}", ("id",bresponse.id)("bresponse",bresponse) );
    if( bresponse.result ) 
       await->second->set_value( *bresponse.result );
    else if( bresponse.error )
    {
-      await->second->set_exception( std::make_exception_ptr( FC_EXCEPTION( exception, "${error}", ("error",bresponse.error->message)("data",bresponse) ) ) );
+      await->second->set_exception( std::make_exception_ptr( FC_EXCEPTION( exception, "{error}", ("error",bresponse.error->message)("data",bresponse) ) ) );
    }
    else
       await->second->set_value( params_type() );

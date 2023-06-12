@@ -60,6 +60,7 @@ set( fc_sources
      src/variant_object.cpp
      src/string.cpp
      src/time.cpp
+     src/mock_time.cpp
      src/utf8.cpp
      src/io/datastream.cpp
      src/io/json.cpp
@@ -71,10 +72,7 @@ set( fc_sources
      src/interprocess/mmap_struct.cpp
      src/log/log_message.cpp
      src/log/logger.cpp
-     src/log/appender.cpp
-     src/log/console_appender.cpp    
-     src/log/dmlog_appender.cpp
-     src/log/logger_config.cpp
+        src/log/logger_config.cpp
      src/crypto/_digest_common.cpp
      src/crypto/openssl.cpp
      src/crypto/aes.cpp
@@ -110,8 +108,7 @@ set( fc_sources
      src/network/http/http_client.cpp
      src/compress/smaz.cpp
      src/compress/zlib.cpp
-     src/log/gelf_appender.cpp
-     src/log/zipkin.cpp
+        src/log/zipkin.cpp
      )
 
 file( GLOB_RECURSE fc_headers ${CMAKE_CURRENT_SOURCE_DIR} *.hpp *.h )
@@ -169,6 +166,8 @@ target_include_directories(fc
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${OPENSSL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/websocketpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include/sinks
   )
 
 # try and make this very clear that this json parser is intended only for webauthn parsing..

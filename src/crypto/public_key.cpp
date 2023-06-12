@@ -45,13 +45,13 @@ namespace fc { namespace crypto {
          constexpr auto prefix = config::public_key_base_prefix;
 
          const auto pivot = base58str.find('_');
-         FC_ASSERT(pivot != std::string::npos, "No delimiter in string, cannot determine data type: ${str}", ("str", base58str));
+         FC_ASSERT(pivot != std::string::npos, "No delimiter in string, cannot determine data type: {str}", ("str", base58str));
 
          const auto prefix_str = base58str.substr(0, pivot);
-         FC_ASSERT(prefix == prefix_str, "Public Key has invalid prefix: ${str}", ("str", base58str)("prefix_str", prefix_str));
+         FC_ASSERT(prefix == prefix_str, "Public Key has invalid prefix: {str}", ("str", base58str)("prefix_str", prefix_str));
 
          auto data_str = base58str.substr(pivot + 1);
-         FC_ASSERT(!data_str.empty(), "Public Key has no data: ${str}", ("str", base58str));
+         FC_ASSERT(!data_str.empty(), "Public Key has no data: {str}", ("str", base58str));
          return base58_str_parser<public_key::storage_type, config::public_key_prefix>::apply(data_str);
       }
    }

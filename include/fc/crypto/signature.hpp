@@ -68,4 +68,17 @@ namespace std {
    };
 } // std
 
+namespace fmt {
+   template<>
+   struct formatter<fc::crypto::signature>{
+      template<typename ParseContext>
+      constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+      template<typename FormatContext>
+      auto format( const fc::crypto::signature& p, FormatContext& ctx ) {
+         return format_to( ctx.out(), "{}", p.to_string());
+      }
+   };
+} // namespace fmt
+
 FC_REFLECT(fc::crypto::signature, (_storage) )

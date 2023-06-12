@@ -59,7 +59,7 @@ public:
    void add_cert(const std::string& cert_pem_string) {
       error_code ec;
       _sslc.add_certificate_authority(boost::asio::buffer(cert_pem_string.data(), cert_pem_string.size()), ec);
-      FC_ASSERT(!ec, "Failed to add cert: ${msg}", ("msg", ec.message()));
+      FC_ASSERT(!ec, "Failed to add cert: {msg}", ("msg", ec.message()));
    }
 
    void set_verify_peers(bool enabled) {
@@ -175,7 +175,7 @@ public:
 
       error_code ec;
       socket->connect(local::stream_protocol::endpoint(*dest.host()), ec);
-      FC_ASSERT(!ec, "Failed to connect: ${message}", ("message",ec.message()));
+      FC_ASSERT(!ec, "Failed to connect: {message}", ("message",ec.message()));
 
       auto res = _connections.emplace(std::piecewise_construct,
                                       std::forward_as_tuple(key),
@@ -190,7 +190,7 @@ public:
       auto socket = std::make_unique<tcp::socket>(_ioc);
 
       error_code ec = sync_connect_with_timeout(*socket, *dest.host(), dest.port() ? std::to_string(*dest.port()) : "80", deadline);
-      FC_ASSERT(!ec, "Failed to connect: ${message}", ("message",ec.message()));
+      FC_ASSERT(!ec, "Failed to connect: {message}", ("message",ec.message()));
 
       auto res = _connections.emplace(std::piecewise_construct,
                                       std::forward_as_tuple(key),
@@ -207,7 +207,7 @@ public:
       if(!SSL_set_tlsext_host_name(ssl_socket->native_handle(), dest.host()->c_str()))
       {
          error_code ec{static_cast<int>(::ERR_get_error()), boost::asio::error::get_ssl_category()};
-         FC_THROW("Unable to set SNI Host Name: ${msg}", ("msg", ec.message()));
+         FC_THROW("Unable to set SNI Host Name: {msg}", ("msg", ec.message()));
       }
 
       ssl_socket->set_verify_callback(boost::asio::ssl::rfc2818_verification(*dest.host()));
@@ -220,7 +220,7 @@ public:
             });
          });
       }
-      FC_ASSERT(!ec, "Failed to connect: ${message}", ("message",ec.message()));
+      FC_ASSERT(!ec, "Failed to connect: {message}", ("message",ec.message()));
 
       auto res = _connections.emplace(std::piecewise_construct,
                                       std::forward_as_tuple(key),
@@ -239,7 +239,7 @@ public:
          return create_unix_connection(dest, deadline);
 #endif
       } else {
-         FC_THROW("Unknown protocol ${proto}", ("proto", dest.proto()));
+         FC_THROW("Unknown protocol {proto}", ("proto", dest.proto()));
       }
    }
 
@@ -351,7 +351,7 @@ public:
 
       // Send the HTTP request to the remote host
       error_code ec = std::visit(write_request_visitor(this, req, deadline), conn_iter->second);
-      FC_ASSERT(!ec, "Failed to send request: ${message}", ("message",ec.message()));
+      FC_ASSERT(!ec, "Failed to send request: {message}", ("message",ec.message()));
 
       // This buffer is used for reading and must be persisted
       boost::beast::flat_buffer buffer;
@@ -361,7 +361,7 @@ public:
 
       // Receive the HTTP response
       ec = std::visit(read_response_visitor(this, buffer, res, deadline), conn_iter->second);
-      FC_ASSERT(!ec, "Failed to read response: ${message}", ("message",ec.message()));
+      FC_ASSERT(!ec, "Failed to read response: {message}", ("message",ec.message()));
 
       // if the connection can be kept open, keep it open
       if (res.keep_alive()) {
@@ -395,9 +395,9 @@ public:
             FC_THROW("Request failed with 500 response, but response was not parseable");
          }
       } else if (res.result() == http::status::not_found) {
-         FC_THROW("URL not found: ${url}", ("url", (std::string)dest));
+         FC_THROW("URL not found: {url}", ("url", (std::string)dest));
       } else if (res.result() == http::status::bad_request) {
-         FC_THROW("Received request: ${msg}", ("msg", res.body()));
+         FC_THROW("Received request: {msg}", ("msg", res.body()));
       }
 
       return result;
@@ -423,7 +423,7 @@ public:
 
       boost::filesystem::path socket_file(full_url);
       if(socket_file.is_relative())
-         FC_THROW_EXCEPTION( parse_error_exception, "socket url cannot be relative (${url})", ("url", socket_file.string()));
+         FC_THROW_EXCEPTION( parse_error_exception, "socket url cannot be relative ({url})", ("url", socket_file.string()));
       if(socket_file.empty())
          FC_THROW_EXCEPTION( parse_error_exception, "missing socket url");
       boost::filesystem::path url_path;

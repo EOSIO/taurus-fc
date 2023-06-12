@@ -10,7 +10,7 @@ namespace fc {
           return c - 'a' + 10;
       if( c >= 'A' && c <= 'F' )
           return c - 'A' + 10;
-      FC_THROW_EXCEPTION( exception, "Invalid hex character '${c}'", ("c", fc::string(&c,1) ) );
+      FC_THROW_EXCEPTION( exception, "Invalid hex character '{c}'", ("c", fc::string(&c,1) ) );
       return 0;
     }
 
