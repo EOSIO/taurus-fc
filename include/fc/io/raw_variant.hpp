@@ -122,7 +122,7 @@ namespace fc { namespace raw {
             return;
          }
          default:
-            FC_THROW_EXCEPTION( parse_error_exception, "Unknown Variant Type ${t}", ("t", t) );
+            FC_THROW_EXCEPTION( parse_error_exception, "Unknown Variant Type {t}", ("t", t) );
       }
     }
 

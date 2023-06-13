@@ -81,6 +81,8 @@ namespace fc
          {
             return save_to_file( variant(v), fc::path(p), pretty, format );
          }
+
+         static std::string pretty_print( const std::string& v, const uint8_t indent );
    };
 
    std::string escape_string( const std::string_view& str, const json::yield_function_t& yield, bool escape_control_chars = true );

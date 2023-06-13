@@ -39,7 +39,7 @@ static void add_macos_root_cas(boost::asio::ssl::context& ctx) {
          if(cert == nullptr)
             continue;
 
-         bool untrusted{false}, trust_as_root{i == 0}, trust_root{false};
+         bool trust_as_root{i == 0}, trust_root{false};
          if(i != 0) {
             for (unsigned int k = i; k < number_domains; k++) {
                CFArrayRef domainTrustSettings = nullptr;
@@ -60,9 +60,7 @@ static void add_macos_root_cas(boost::asio::ssl::context& ctx) {
                if(CFDictionaryGetValueIfPresent(tSetting, kSecTrustSettingsResult, (const void**)&cfNum)){
                   SInt32 result = 0;
                   CFNumberGetValue(cfNum, kCFNumberSInt32Type, &result);
-                  if(result == kSecTrustSettingsResultDeny)
-							untrusted = true;
-						else if (result == kSecTrustSettingsResultTrustAsRoot)
+                  if (result == kSecTrustSettingsResultTrustAsRoot)
 							trust_as_root = true;
 						else if (result == kSecTrustSettingsResultTrustRoot)
 							trust_root = true;

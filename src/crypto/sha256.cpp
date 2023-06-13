@@ -9,6 +9,8 @@
 #include <fc/exception/exception.hpp>
 #include "_digest_common.hpp"
 
+#include <fstream>
+
 namespace fc {
 
     sha256::sha256() { memset( _hash, 0, sizeof(_hash) ); }
@@ -51,9 +53,20 @@ namespace fc {
       return hash( s.c_str(), s.size() );
     }
 
-    sha256 sha256::hash( const sha256& s )
-    {
-        return hash( s.data(), sizeof( s._hash ) );
+    sha256 sha256::hash( const sha256& s ) {
+      return hash( s.data(), sizeof( s._hash ) );
+    }
+
+    sha256 sha256::hash( std::ifstream& ifs) {
+      encoder e;
+      // 1 MB buffer is sufficiently large for performance, as shown by tests
+      std::string buf_str(1024 * 1024, '\0'); // reads 1 MB at a time
+      char* buf = buf_str.data();
+      while (ifs) {
+        ifs.read(buf, 1024 * 1024);
+        e.write(buf, ifs.gcount());
+      }
+      return e.result();
     }
 
     void sha256::encoder::write( const char* d, uint32_t dlen ) {

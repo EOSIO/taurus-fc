@@ -17,10 +17,10 @@ fc::path find_executable_in_path( const fc::string name ) {
     return fc::string(bp::find_executable_in_path( std::string(name), "" ));
   } catch (...) {
     const char* p = std::getenv("PATH");
-    FC_THROW( "Unable to find executable ${exe} in path.", 
+    FC_THROW( "Unable to find executable {exe} in {path}.",
       ("exe", name)
       ("inner", fc::except_str() )
-      ("PATH", fc::string(p!=nullptr?p:"") ) );
+      ("path", fc::string(p!=nullptr?p:"") ) );
   }
   return fc::path();
 }
@@ -48,7 +48,7 @@ class process::impl
     }
     catch(...) 
     {
-      wlog( "caught exception cleaning up process: ${except_str}", ("except_str",fc::except_str()) );
+      wlog( "caught exception cleaning up process: {except_str}", ("except_str",fc::except_str()) );
     }
   }
 
@@ -130,7 +130,7 @@ iprocess& process::exec( const fc::path& exe,
           {
              p->set_exception( 
                  fc::exception_ptr( new fc::exception( 
-                     FC_LOG_MESSAGE( error, "process exited with: ${message} ", 
+                     FC_LOG_MESSAGE( error, "process exited with: {message} ",
                                      ("message", strsignal(WTERMSIG(exit_code))) ) ) ) );
           }
           #else
@@ -141,7 +141,7 @@ iprocess& process::exec( const fc::path& exe,
        {
           p->set_exception( 
               fc::exception_ptr( new fc::exception( 
-                  FC_LOG_MESSAGE( error, "process exited with: ${message} ", 
+                  FC_LOG_MESSAGE( error, "process exited with: {message} ",
                                   ("message", boost::system::system_error(ec).what())) ) ) );
        }
     });

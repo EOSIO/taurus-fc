@@ -104,7 +104,7 @@ namespace fc {
          variant call( const string& name, const variants& args )
          {
             auto itr = _by_name.find(name);
-            FC_ASSERT( itr != _by_name.end(), "no method with name '${name}'", ("name",name)("api",_by_name) );
+            FC_ASSERT( itr != _by_name.end(), "no method with name '{name}'", ("name",name)("api",_by_name) );
             return call( itr->second, args );
          }
 

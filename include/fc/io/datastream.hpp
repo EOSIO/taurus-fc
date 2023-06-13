@@ -140,7 +140,7 @@ class datastream<Container, typename std::enable_if_t<(std::is_same_v<std::vecto
    size_t read(char* s, size_t n) {
       if (cur + n > _container.size()) {
          FC_THROW_EXCEPTION(out_of_range_exception,
-                            "read datastream<std::vector<char>> of length ${len} over by ${over}",
+                            "read datastream<std::vector<char>> of length {len} over by {over}",
                             ("len", _container.size())("over", _container.size() - n));
       }
       std::copy_n(_container.begin() + cur, n, s);
@@ -177,25 +177,25 @@ class datastream<Container, typename std::enable_if_t<(std::is_same_v<std::vecto
 
 
 template<typename ST>
-inline datastream<ST>& operator<<(datastream<ST>& ds, const __int128& d) {
+inline datastream<ST>& operator<<(datastream<ST>& ds, const int128_t& d) {
   ds.write( (const char*)&d, sizeof(d) );
   return ds;
 }
 
 template<typename ST, typename DATA>
-inline datastream<ST>& operator>>(datastream<ST>& ds, __int128& d) {
+inline datastream<ST>& operator>>(datastream<ST>& ds, int128_t& d) {
   ds.read((char*)&d, sizeof(d) );
   return ds;
 }
 
 template<typename ST>
-inline datastream<ST>& operator<<(datastream<ST>& ds, const unsigned __int128& d) {
+inline datastream<ST>& operator<<(datastream<ST>& ds, const uint128_t& d) {
   ds.write( (const char*)&d, sizeof(d) );
   return ds;
 }
 
 template<typename ST, typename DATA>
-inline datastream<ST>& operator>>(datastream<ST>& ds, unsigned __int128& d) {
+inline datastream<ST>& operator>>(datastream<ST>& ds, uint128_t& d) {
   ds.read((char*)&d, sizeof(d) );
   return ds;
 }

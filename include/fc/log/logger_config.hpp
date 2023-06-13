@@ -1,6 +1,6 @@
 #pragma once
 #include <fc/log/logger.hpp>
-#include <fc/log/appender.hpp>
+#include <spdlog/spdlog.h>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -8,53 +8,62 @@
 
 namespace fc {
    class path;
-   struct appender_config {
-      appender_config(const string& name = "",
-                      const string& type = "",
-                      variant args = variant()) :
-        name(name),
-        type(type),
-        args(fc::move(args)),
-        enabled(true)
-      {}
-      string   name;
-      string   type;
-      variant  args;
-      bool     enabled;
+   struct sink_config {
+       sink_config(const string& name = "", const string& type = "", variant args = variant())
+          : name(name), type(type), args(fc::move(args)), enabled(true) {}
+       string name;
+       string type;
+       variant args;
+       bool enabled;
    };
 
+   namespace sink {
+      struct level_color {
+          level_color ( string l = "trace", string c = "yellow")
+                  : level(l), color(c) {}
+
+          string  level;
+          string  color;
+      };
+
+      struct stderr_color_sink_st_config {
+          std::vector<level_color>      level_colors;
+      };
+
+      struct daily_file_sink_mt_config {
+         std::string    base_filename;
+         int32_t        rotation_hour = 0;
+         int32_t        rotation_minute = 0;
+         bool           truncate = false;
+         uint32_t       max_files = 0;
+      };
+
+      struct rotating_file_sink_mt_config {
+         string         base_filename;
+         uint32_t       max_size = 1048576*10; // 10MB
+         uint32_t       max_files = 10;
+      };
+
+   } // namespace sink
+
    struct logger_config {
-      logger_config(const fc::string& name = ""):name(name),enabled(true),additivity(false){}
+      logger_config(const fc::string& name = ""):name(name),enabled(true){}
       string                           name;
-      ostring                          parent;
-      /// if not set, then parents level is used.
       std::optional<log_level>         level;
       bool                             enabled;
-      /// if any appenders are sepecified, then parent's appenders are not set.
-      bool                             additivity;
-      std::vector<string>              appenders;
+      std::vector<string>              sinks;
    };
 
    struct logging_config {
       static logging_config default_config();
       std::vector<string>          includes;
-      std::vector<appender_config> appenders;
+      std::vector<sink_config>     sinks;
       std::vector<logger_config>   loggers;
    };
 
    struct log_config {
-
-      template<typename T>
-      static bool register_appender(const fc::string& type) {
-         return register_appender( type, std::make_shared<detail::appender_factory_impl<T>>() );
-      }
-
-      static bool register_appender( const fc::string& type, const appender_factory::ptr& f );
-
       static logger get_logger( const fc::string& name );
       static void update_logger( const fc::string& name, logger& log );
-
-      static void initialize_appenders( boost::asio::io_service& ios );
 
       static bool configure_logging( const logging_config& l );
 
@@ -63,10 +72,9 @@ namespace fc {
 
       friend class logger;
 
-      std::mutex                                               log_mutex;
-      std::unordered_map<std::string, appender_factory::ptr>   appender_factory_map;
-      std::unordered_map<std::string, appender::ptr>           appender_map;
-      std::unordered_map<std::string, logger>                  logger_map;
+      std::mutex                                                             log_mutex;
+      std::unordered_map<std::string, std::shared_ptr<spdlog::sinks::sink>>  sink_map;
+      std::unordered_map<std::string, logger>                                logger_map;
    };
 
    void configure_logging( const fc::path& log_config );
@@ -78,6 +86,10 @@ namespace fc {
 }
 
 #include <fc/reflect/reflect.hpp>
-FC_REFLECT( fc::appender_config, (name)(type)(args)(enabled) )
-FC_REFLECT( fc::logger_config, (name)(parent)(level)(enabled)(additivity)(appenders) )
-FC_REFLECT( fc::logging_config, (includes)(appenders)(loggers) )
+FC_REFLECT( fc::sink_config, (name)(type)(args)(enabled) )
+FC_REFLECT( fc::sink::level_color, (level)(color) )
+FC_REFLECT( fc::sink::stderr_color_sink_st_config, (level_colors) )
+FC_REFLECT( fc::sink::daily_file_sink_mt_config, (base_filename)(rotation_hour)(rotation_minute)(truncate)(max_files) )
+FC_REFLECT( fc::sink::rotating_file_sink_mt_config, (base_filename)(max_size)(max_files) )
+FC_REFLECT( fc::logger_config, (name)(level)(enabled)(sinks) )
+FC_REFLECT( fc::logging_config, (includes)(sinks)(loggers) )

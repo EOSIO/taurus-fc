@@ -232,7 +232,7 @@ namespace fc { namespace ecc {
         rtn.my->_key = EC_KEY_new_by_curve_name( NID_secp256k1 );
         EC_KEY_set_public_key(rtn.my->_key,result);
         return rtn;
-      } FC_RETHROW_EXCEPTIONS( debug, "digest: ${digest}", ("digest",digest) );
+      } FC_RETHROW_EXCEPTIONS( debug, "digest: {digest}", ("digest",digest) );
     }
 
     std::string public_key::to_base58() const

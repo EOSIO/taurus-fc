@@ -16,7 +16,7 @@ namespace fc { namespace ip {
     {
       _ip = boost::asio::ip::address_v4::from_string(s.c_str()).to_ulong();
     }
-    FC_RETHROW_EXCEPTIONS(error, "Error parsing IP address ${address}", ("address", s))
+    FC_RETHROW_EXCEPTIONS(error, "Error parsing IP address {address}", ("address", s))
   }
 
   bool operator==( const address& a, const address& b ) {
@@ -32,7 +32,7 @@ namespace fc { namespace ip {
     {
       _ip = boost::asio::ip::address_v4::from_string(s.c_str()).to_ulong();
     }
-    FC_RETHROW_EXCEPTIONS(error, "Error parsing IP address ${address}", ("address", s))
+    FC_RETHROW_EXCEPTIONS(error, "Error parsing IP address {address}", ("address", s))
     return *this;
   }
 

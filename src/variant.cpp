@@ -391,7 +391,7 @@ int64_t variant::as_int64()const
       case null_type:
           return 0;
       default:
-         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to int64", ("type", get_type()) );
+         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to int64", ("type", get_type()) );
    }
 }
 
@@ -412,9 +412,9 @@ uint64_t variant::as_uint64()const
       case null_type:
           return 0;
       default:
-         FC_THROW_EXCEPTION( bad_cast_exception,"Invalid cast from ${type} to uint64", ("type",get_type()));
+         FC_THROW_EXCEPTION( bad_cast_exception,"Invalid cast from {type} to uint64", ("type",get_type()));
    }
-} FC_CAPTURE_AND_RETHROW( (*this) ) }
+} FC_CAPTURE_AND_RETHROW( (fc::json::to_string(*this, fc::time_point::now() + fc::exception::format_time_limit)) ) }
 
 
 double  variant::as_double()const
@@ -434,7 +434,7 @@ double  variant::as_double()const
       case null_type:
           return 0;
       default:
-         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to double", ("type",get_type()) );
+         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to double", ("type",get_type()) );
    }
 }
 
@@ -462,7 +462,7 @@ bool  variant::as_bool()const
       case null_type:
           return false;
       default:
-         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to bool" , ("type",get_type()));
+         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to bool" , ("type",get_type()));
    }
 }
 
@@ -487,7 +487,7 @@ string    variant::as_string()const
       case null_type:
           return string();
       default:
-      FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to string", ("type", get_type() ) );
+      FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to string", ("type", get_type() ) );
    }
 }
 
@@ -498,21 +498,21 @@ variants&         variant::get_array()
   if( get_type() == array_type )
      return **reinterpret_cast<variants**>(this);
 
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Array", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Array", ("type",get_type()) );
 }
 blob&         variant::get_blob()
 {
   if( get_type() == blob_type )
      return **reinterpret_cast<blob**>(this);
 
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Blob", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Blob", ("type",get_type()) );
 }
 const blob&         variant::get_blob()const
 {
   if( get_type() == blob_type )
      return **reinterpret_cast<const const_blob_ptr*>(this);
 
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Blob", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Blob", ("type",get_type()) );
 }
 
 blob variant::as_blob()const
@@ -534,7 +534,7 @@ blob variant::as_blob()const
       }
       case object_type:
       case array_type:
-         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Blob", ("type",get_type()) );
+         FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Blob", ("type",get_type()) );
       default:
          return blob( { std::vector<char>( (char*)&_data, (char*)&_data + sizeof(_data) ) } );
    }
@@ -546,7 +546,7 @@ const variants&       variant::get_array()const
 {
   if( get_type() == array_type )
      return **reinterpret_cast<const const_variants_ptr*>(this);
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Array", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Array", ("type",get_type()) );
 }
 
 
@@ -555,7 +555,7 @@ variant_object&        variant::get_object()
 {
   if( get_type() == object_type )
      return **reinterpret_cast<variant_object**>(this);
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from ${type} to Object", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from {type} to Object", ("type",get_type()) );
 }
 
 const variant& variant::operator[]( const char* key )const
@@ -576,7 +576,7 @@ const string&        variant::get_string()const
 {
   if( get_type() == string_type )
      return **reinterpret_cast<const const_string_ptr*>(this);
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from type '${type}' to string", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from type '{type}' to string", ("type",get_type()) );
 }
 
 /// @throw if get_type() != object_type
@@ -584,7 +584,7 @@ const variant_object&  variant::get_object()const
 {
   if( get_type() == object_type )
      return **reinterpret_cast<const const_variant_object_ptr*>(this);
-  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from type '${type}' to Object", ("type",get_type()) );
+  FC_THROW_EXCEPTION( bad_cast_exception, "Invalid cast from type '{type}' to Object", ("type",get_type()) );
 }
 
 void from_variant( const variant& var,  variants& vo )
@@ -630,33 +630,33 @@ void from_variant( const variant& var,  int32_t& vo )
    vo = static_cast<int32_t>(var.as_int64());
 }
 
-void to_variant( const unsigned __int128& var,  variant& vo )  {
+void to_variant( const uint128_t& var,  variant& vo )  {
    vo = boost::multiprecision::uint128_t( var ).str();
 }
 
-void from_variant( const variant& var,  unsigned __int128& vo )
+void from_variant( const variant& var,  uint128_t& vo )
 {
    if( var.is_uint64() ) {
       vo = var.as_uint64();
    } else if( var.is_string() ) {
-      vo = static_cast<unsigned __int128>( boost::multiprecision::uint128_t(var.as_string()) );
+      vo = static_cast<uint128_t>( boost::multiprecision::uint128_t(var.as_string()) );
    } else {
-      FC_THROW_EXCEPTION( bad_cast_exception, "Cannot convert variant of type '${type}' into a uint128_t", ("type", var.get_type()) );
+      FC_THROW_EXCEPTION( bad_cast_exception, "Cannot convert variant of type '{type}' into a uint128_t", ("type", var.get_type()) );
    }
 }
 
-void to_variant( const __int128& var,  variant& vo )  {
+void to_variant( const int128_t& var,  variant& vo )  {
    vo = boost::multiprecision::int128_t( var ).str();
 }
 
-void from_variant( const variant& var,  __int128& vo )
+void from_variant( const variant& var,  int128_t& vo )
 {
    if( var.is_int64() ) {
       vo = var.as_int64();
    } else if( var.is_string() ) {
-      vo = static_cast<__int128>( boost::multiprecision::int128_t(var.as_string()) );
+      vo = static_cast<int128_t>( boost::multiprecision::int128_t(var.as_string()) );
    } else {
-      FC_THROW_EXCEPTION( bad_cast_exception, "Cannot convert variant of type '${type}' into a int128_t", ("type", var.get_type()) );
+      FC_THROW_EXCEPTION( bad_cast_exception, "Cannot convert variant of type '{type}' into a int128_t", ("type", var.get_type()) );
    }
 }
 
@@ -739,6 +739,7 @@ void to_variant( const UInt<64>& n, variant& v ) { v = uint64_t(n); }
 void from_variant( const variant& v, UInt<64>& n ) { n = v.as_uint64(); }
 
 constexpr size_t minimize_max_size = 1024;
+//constexpr size_t minimize_max_size = 10;  //test
 
 // same behavior as std::string::substr only removes invalid utf8, and lower ascii
 void clean_append( string& app, const std::string_view& s, size_t pos = 0, size_t len = string::npos ) {
@@ -922,7 +923,7 @@ string format_string( const string& frmt, const variant_object& args, bool minim
       if( a.is_double()  || b.is_double() ) return a.as_double() + b.as_double();
       if( a.is_int64()   || b.is_int64() )  return a.as_int64() + b.as_int64();
       if( a.is_uint64()  || b.is_uint64() ) return a.as_uint64() + b.as_uint64();
-      FC_ASSERT( false, "invalid operation ${a} + ${b}", ("a",a)("b",b) );
+      FC_ASSERT( false, "invalid operation" );
    }
 
    variant operator - ( const variant& a, const variant& b )
@@ -949,7 +950,7 @@ string format_string( const string& frmt, const variant_object& args, bool minim
       if( a.is_double()  || b.is_double() ) return a.as_double() - b.as_double();
       if( a.is_int64()   || b.is_int64() )  return a.as_int64() - b.as_int64();
       if( a.is_uint64()  || b.is_uint64() ) return a.as_uint64() - b.as_uint64();
-      FC_ASSERT( false, "invalid operation ${a} + ${b}", ("a",a)("b",b) );
+      FC_ASSERT( false, "invalid operation" );
    }
    variant operator * ( const variant& a, const variant& b )
    {
@@ -974,7 +975,7 @@ string format_string( const string& frmt, const variant_object& args, bool minim
          }
          return result;
       }
-      FC_ASSERT( false, "invalid operation ${a} * ${b}", ("a",a)("b",b) );
+      FC_ASSERT( false, "invalid operation" );
    }
    variant operator / ( const variant& a, const variant& b )
    {
@@ -999,6 +1000,6 @@ string format_string( const string& frmt, const variant_object& args, bool minim
          }
          return result;
       }
-      FC_ASSERT( false, "invalid operation ${a} / ${b}", ("a",a)("b",b) );
+      FC_ASSERT( false, "invalid operation" );
    }
 } // namespace fc

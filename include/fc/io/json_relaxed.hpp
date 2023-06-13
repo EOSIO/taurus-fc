@@ -78,7 +78,7 @@ namespace fc { namespace json_relaxed
          return token.str();
       }
 
-      FC_RETHROW_EXCEPTIONS( warn, "while parsing token '${token}'",
+      FC_RETHROW_EXCEPTIONS( warn, "while parsing token '{token}'",
                                           ("token", token.str() ) );
    }
 
@@ -139,7 +139,7 @@ namespace fc { namespace json_relaxed
                            continue;
                        }
                        else if( c == '\x04' )
-                           FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOF in string '${token}'",
+                           FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOF in string '{token}'",
                                       ("token", token.str() ) );
                        else if( allow_escape && (c == '\\') )
                            token << parseEscape( in );
@@ -166,12 +166,12 @@ namespace fc { namespace json_relaxed
                    return token.str();
                }
                else if( c == '\x04' )
-                   FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOF in string '${token}'",
+                   FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOF in string '{token}'",
                               ("token", token.str() ) );
                else if( allow_escape && (c == '\\') )
                    token << parseEscape( in );
                else if( (c == '\r') | (c == '\n') )
-                   FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOL in string '${token}'",
+                   FC_THROW_EXCEPTION( parse_error_exception, "unexpected EOL in string '{token}'",
                               ("token", token.str() ) );
                else
                {
@@ -180,7 +180,7 @@ namespace fc { namespace json_relaxed
                }
            }
            
-       } FC_RETHROW_EXCEPTIONS( warn, "while parsing token '${token}'",
+       } FC_RETHROW_EXCEPTIONS( warn, "while parsing token '{token}'",
                                           ("token", token.str() ) );
    }
 
@@ -310,7 +310,7 @@ namespace fc { namespace json_relaxed
            char c = token[i];
            uint8_t vc = ctbl[c];
            if( vc == 0xFF )
-               FC_THROW_EXCEPTION( parse_error_exception, "illegal character ${c} in integer of base ${b}", ("c", c)("b", base) );
+               FC_THROW_EXCEPTION( parse_error_exception, "illegal character {c} in integer of base {b}", ("c", c)("b", base) );
            if( val > maxb4mul )
                FC_THROW_EXCEPTION( parse_error_exception, "integer literal overflow" );
            val *= base;
@@ -403,7 +403,7 @@ namespace fc { namespace json_relaxed
                    default:
                        // since this is a lookahead, other cases will be treated later
                        if( strict )
-                           FC_THROW_EXCEPTION( parse_error_exception, "expected '.'|'e'|'E' parsing number, got '${c}'",
+                           FC_THROW_EXCEPTION( parse_error_exception, "expected '.'|'e'|'E' parsing number, got '{c}'",
                                ( "c", c ) );
                }
                break;
@@ -420,10 +420,10 @@ namespace fc { namespace json_relaxed
            case 'Y': case 'Z':
            case '_': case '-': case '.': case '+': case '/':
                if( strict )
-                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' parsing number", ( "c", c ) );
+                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' parsing number", ( "c", c ) );
                return fc::variant( token );
            default:
-               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in token", ( "c", c ) );
+               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in token", ( "c", c ) );
        }
        size_t start = i-1;
 
@@ -479,7 +479,7 @@ namespace fc { namespace json_relaxed
                                    FC_THROW_EXCEPTION( parse_error_exception, "expected digit after '.'" );
                                return fc::variant( token );
                            default:
-                               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in token", ( "c", c )("i",int(c)) );
+                               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in token", ( "c", c )("i",int(c)) );
                        }
                    }
                    else
@@ -521,10 +521,10 @@ namespace fc { namespace json_relaxed
                        case 'Y': case 'Z':
                        case '_':           case '.':           case '/':
                            if( strict )
-                               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in number", ( "c", c ) );
+                               FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in number", ( "c", c ) );
                            return fc::variant( token );
                        default:
-                           FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in token", ( "c", c ) );
+                           FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in token", ( "c", c ) );
                    }
                    while( true )
                    {
@@ -546,7 +546,7 @@ namespace fc { namespace json_relaxed
                            case 'Y': case 'Z':
                            case '_': case '-': case '.': case '+': case '/':
                                if( strict )
-                                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in number", ( "c", c ) );
+                                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in number", ( "c", c ) );
                                return fc::variant( token );
                        }
                    }
@@ -561,10 +561,10 @@ namespace fc { namespace json_relaxed
                case 'Y': case 'Z':
                case '_': case '-':           case '+': case '/':
                    if( strict )
-                       FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' parsing number", ( "c", c ) );
+                       FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' parsing number", ( "c", c ) );
                    return fc::variant( token );
                default:
-                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '${c}' in number", ( "c", c ) );
+                   FC_THROW_EXCEPTION( parse_error_exception, "illegal character '{c}' in number", ( "c", c ) );
            }
        }
    } FC_CAPTURE_AND_RETHROW( (token) ) }
@@ -578,7 +578,7 @@ namespace fc { namespace json_relaxed
          char c = in.peek();
          if( c != '{' )
             FC_THROW_EXCEPTION( parse_error_exception,
-                                     "Expected '{', but read '${char}'",
+                                     "Expected '{', but read '{char}'",
                                      ("char",string(&c, &c + 1)) );
          in.get();
          skip_white_space(in);
@@ -594,7 +594,7 @@ namespace fc { namespace json_relaxed
             skip_white_space(in);
             if( in.peek() != ':' )
             {
-               FC_THROW_EXCEPTION( parse_error_exception, "Expected ':' after key \"${key}\"",
+               FC_THROW_EXCEPTION( parse_error_exception, "Expected ':' after key \"{key}\"",
                                         ("key", key) );
             }
             in.get();
@@ -608,15 +608,16 @@ namespace fc { namespace json_relaxed
             in.get();
             return obj;
          }
-         FC_THROW_EXCEPTION( parse_error_exception, "Expected '}' after ${variant}", ("variant", obj ) );
+         FC_THROW_EXCEPTION( parse_error_exception, "Expected right curly brace symbol after {variant}",
+                             ("variant", fc::json::to_string(obj, fc::time_point::now() + fc::exception::format_time_limit) ) );
       }
       catch( const fc::eof_exception& e )
       {
-         FC_THROW_EXCEPTION( parse_error_exception, "Unexpected EOF: ${e}", ("e", e.to_detail_string() ) );
+         FC_THROW_EXCEPTION( parse_error_exception, "Unexpected EOF: {e}", ("e", e.to_detail_string() ) );
       }
       catch( const std::ios_base::failure& e )
       {
-         FC_THROW_EXCEPTION( parse_error_exception, "Unexpected EOF: ${e}", ("e", e.what() ) );
+         FC_THROW_EXCEPTION( parse_error_exception, "Unexpected EOF: {e}", ("e", e.what() ) );
       } FC_RETHROW_EXCEPTIONS( warn, "Error parsing object" );
    }
 
@@ -643,12 +644,12 @@ namespace fc { namespace json_relaxed
            skip_white_space(in);
         }
         if( in.peek() != ']' )
-           FC_THROW_EXCEPTION( parse_error_exception, "Expected ']' after parsing ${variant}",
-                                    ("variant", ar) );
+           FC_THROW_EXCEPTION( parse_error_exception, "Expected ']' after parsing {variant}",
+                                    ("variant", fc::json::to_string(ar, fc::time_point::now() + fc::exception::format_time_limit)) );
 
         in.get();
-      } FC_RETHROW_EXCEPTIONS( warn, "Attempting to parse array ${array}",
-                                         ("array", ar ) );
+      } FC_RETHROW_EXCEPTIONS( warn, "Attempting to parse array {array}",
+                                         ("array", fc::json::to_string(ar, fc::time_point::now() + fc::exception::format_time_limit)) );
       return ar;
    }
 
@@ -743,7 +744,7 @@ namespace fc { namespace json_relaxed
             case EOF:
               FC_THROW_EXCEPTION( eof_exception, "unexpected end of file" );
             default:
-              FC_THROW_EXCEPTION( parse_error_exception, "Unexpected char '${c}' in \"${s}\"",
+              FC_THROW_EXCEPTION( parse_error_exception, "Unexpected char '{c}' in \"{s}\"",
                                  ("c", c)("s", stringFromToken(in)) );
          }
       }

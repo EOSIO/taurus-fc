@@ -2,6 +2,7 @@
 
 #include <fc/crypto/base58.hpp>
 #include <fc/crypto/openssl.hpp>
+#include <fc/crypto/sha256.hpp>
 
 #include <fc/fwd_impl.hpp>
 #include <fc/exception/exception.hpp>
@@ -308,7 +309,7 @@ namespace fc { namespace crypto { namespace r1 {
         rtn.my->_key = EC_KEY_new_by_curve_name( NID_X9_62_prime256v1 );
         EC_KEY_set_public_key(rtn.my->_key,result);
         return rtn;
-      } FC_RETHROW_EXCEPTIONS( debug, "digest: ${digest}", ("digest",digest) );
+      } FC_RETHROW_EXCEPTIONS( debug, "digest: {digest}", ("digest",digest) );
     }
 
     std::string public_key::to_base58() const
@@ -564,7 +565,7 @@ namespace fc { namespace crypto { namespace r1 {
           FC_THROW_EXCEPTION( exception, "Unable to sign" );
 
         return signature_from_ecdsa(my->_key, my_pub_key, sig, digest);
-      } FC_RETHROW_EXCEPTIONS( warn, "sign ${digest}", ("digest", digest)("private_key",*this) );
+      } FC_RETHROW_EXCEPTIONS( warn, "sign {digest}", ("digest", digest) );
     }
 
    private_key& private_key::operator=( private_key&& pk )

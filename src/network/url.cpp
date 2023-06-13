@@ -40,7 +40,7 @@ namespace fc
               try {
               _port = static_cast<uint16_t>(to_uint64( host_port.substr( pos+1 ) ));
               } catch ( ... ) {
-                FC_THROW_EXCEPTION( parse_error_exception, "Unable to parse port field in url",( "url", s ) );
+                FC_THROW_EXCEPTION( parse_error_exception, "Unable to parse port field in {url}",( "url", s ) );
               }
               _host = host_port.substr(0,pos);
            } else {

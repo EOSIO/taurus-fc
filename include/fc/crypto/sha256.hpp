@@ -6,6 +6,8 @@
 
 #include <boost/container_hash/hash.hpp>
 
+#include <fstream>
+
 namespace fc
 {
 
@@ -26,6 +28,9 @@ class sha256
     static sha256 hash( const char* d, uint32_t dlen );
     static sha256 hash( const string& );
     static sha256 hash( const sha256& );
+    // caller should check !ifs.bad() && ifs.eof() after hashing to make sure
+    // that the file has been read properly and completely
+    static sha256 hash( std::ifstream& ifs );
 
     template<typename T>
     static sha256 hash( const T& t ) 
@@ -110,6 +115,21 @@ class sha256
   uint64_t hash64(const char* buf, size_t len);    
 
 } // fc
+
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ranges.h>
+namespace fmt {
+   template<>
+   struct formatter<fc::sha256> {
+      template<typename ParseContext>
+      constexpr auto parse( ParseContext& ctx ) { return ctx.begin(); }
+
+      template<typename FormatContext>
+      auto format( const fc::sha256& p, FormatContext& ctx ) {
+         return format_to( ctx.out(), "{}", p.str() );
+      }
+   };
+}
 
 namespace std
 {

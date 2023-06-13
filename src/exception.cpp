@@ -157,7 +157,6 @@ namespace fc
     */
    string exception::to_detail_string( log_level ll  )const
    {
-      const auto deadline = fc::time_point::now() + format_time_limit;
       std::stringstream ss;
       try {
          try {
@@ -171,7 +170,6 @@ namespace fc
          for( auto itr = my->_elog.begin(); itr != my->_elog.end(); ++itr ) {
             try {
                ss << itr->get_message() << "\n"; //fc::format_string( itr->get_format(), itr->get_data() ) <<"\n";
-               ss << "    " << json::to_string( itr->get_data(), deadline ) << "\n";
                ss << "    " << itr->get_context().to_string() << "\n";
             } catch( std::bad_alloc& ) {
                throw;
@@ -209,7 +207,7 @@ namespace fc
          for( auto itr = my->_elog.begin(); itr != my->_elog.end(); ++itr ) {
             try {
                FC_CHECK_DEADLINE(deadline);
-               ss << fc::format_string( itr->get_format(), itr->get_data(), true) << "\n";
+               ss << itr->get_message() << "\n";
                //      ss << "    " << itr->get_context().to_string() <<"\n";
             } catch( std::bad_alloc& ) {
                throw;
@@ -236,7 +234,7 @@ namespace fc
    {
       for( auto itr = my->_elog.begin(); itr != my->_elog.end(); ++itr )
       {
-         auto s = fc::format_string( itr->get_format(), itr->get_data() );
+         auto s = itr->get_message();
          if (!s.empty()) {
             return s;
          }
@@ -274,13 +272,13 @@ namespace fc
    void throw_bad_enum_cast( int64_t i, const char* e )
    {
       FC_THROW_EXCEPTION( bad_cast_exception,
-                          "invalid index '${key}' in enum '${enum}'",
+                          "invalid index '{key}' in enum '{enum}'",
                           ("key",i)("enum",e) );
    }
    void throw_bad_enum_cast( const char* k, const char* e )
    {
       FC_THROW_EXCEPTION( bad_cast_exception,
-                          "invalid name '${key}' in enum '${enum}'",
+                          "invalid name '{key}' in enum '{enum}'",
                           ("key",k)("enum",e) );
    }
 
@@ -334,7 +332,7 @@ namespace fc
 
    std_exception_wrapper std_exception_wrapper::from_current_exception(const std::exception& e)
    {
-     return std_exception_wrapper{FC_LOG_MESSAGE(warn, "rethrow ${what}: ", ("what",e.what())), 
+     return std_exception_wrapper{FC_LOG_MESSAGE(warn, "rethrow {what}: ", ("what",e.what())),
                                   std::current_exception(), 
                                   BOOST_CORE_TYPEID(e).name(), 
                                   e.what()};

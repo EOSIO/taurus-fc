@@ -90,7 +90,7 @@ namespace fc
         }
         catch (exception& er)
         {
-          ilog("Failed to connect to GNTP service using an endpoint that previously worked: ${error_report}", 
+          ilog("Failed to connect to GNTP service using an endpoint that previously worked: {error_report}",
               ("error_report", er.to_detail_string()));
           sock->close();
           // clear the cached endpoint and fall through to the full connection procedure
@@ -109,7 +109,7 @@ namespace fc
         // do the full connection procedure
         auto eps = asio::tcp::resolve(hostname, boost::lexical_cast<std::string>(port));
         if (eps.size() == 0)
-          FC_THROW("Unable to resolve host '${host}'", ("host", hostname));
+          FC_THROW("Unable to resolve host '{host}'", ("host", hostname));
 
         for (uint32_t i = 0; i < eps.size(); ++i)
         {
@@ -124,7 +124,7 @@ namespace fc
           }
           catch (const exception& er) 
           {
-            ilog("Failed to connect to GNTP service: ${error_reprot}", 
+            ilog("Failed to connect to GNTP service: {error_reprot}",
                   ("error_report", er.to_detail_string()) );
             sock->close();
           }
@@ -136,7 +136,7 @@ namespace fc
         }
       }
       if (!connected)
-        FC_THROW("Unable to connect to any resolved endpoint for ${host}:${port}", 
+        FC_THROW("Unable to connect to any resolved endpoint for {host}:{port}",
                   ("host", hostname)("port", port));
       try
       {

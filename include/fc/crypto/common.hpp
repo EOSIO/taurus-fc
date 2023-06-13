@@ -58,7 +58,7 @@ namespace fc { namespace crypto {
    template<typename Result, const char * const * Prefixes, int Position>
    struct base58_str_parser_impl<Result, Prefixes, Position> {
       static Result apply(const std::string& prefix_str, const std::string& data_str ) {
-         FC_ASSERT(false, "No matching suite type for ${prefix}_${data}", ("prefix", prefix_str)("data",data_str));
+         FC_ASSERT(false, "No matching suite type for {prefix}_{data}", ("prefix", prefix_str)("data",data_str));
       }
    };
 
@@ -75,11 +75,11 @@ namespace fc { namespace crypto {
    struct base58_str_parser<std::variant<Ts...>, Prefixes> {
       static std::variant<Ts...> apply(const std::string& base58str) {
          const auto pivot = base58str.find('_');
-         FC_ASSERT(pivot != std::string::npos, "No delimiter in data, cannot determine suite type: ${str}", ("str", base58str));
+         FC_ASSERT(pivot != std::string::npos, "No delimiter in data, cannot determine suite type: {str}", ("str", base58str));
 
          const auto prefix_str = base58str.substr(0, pivot);
          auto data_str = base58str.substr(pivot + 1);
-         FC_ASSERT(!data_str.empty(), "Data only has suite type prefix: ${str}", ("str", base58str));
+         FC_ASSERT(!data_str.empty(), "Data only has suite type prefix: {str}", ("str", base58str));
 
          return base58_str_parser_impl<std::variant<Ts...>, Prefixes, 0, Ts...>::apply(prefix_str, data_str);
       }
@@ -178,7 +178,7 @@ namespace fc { namespace crypto {
       {}
 
       shim(data_type&& data)
-      :_data(forward<data_type>(data))
+      :_data(std::forward<data_type>(data))
       {}
 
       shim(const data_type& data)
